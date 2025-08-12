@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人信息源主页</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .time-display {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .date-display {
+            font-size: 1.2em;
+            color: #7f8c8d;
+        }
+
+        .weather-display {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .weather-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 8px;
+        }
+
+        .location {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .temperature {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .weather-desc {
+            color: #3498db;
+            font-weight: 500;
+        }
+
+        .weather-details {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            margin: 0 10px;
+            background: transparent;
+            border: 2px solid #3498db;
+            color: #3498db;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .nav-tab:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .content-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid #3498db;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .news-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .news-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .news-title a:hover {
+            color: #3498db;
+        }
+
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 15px;
+        }
+
+        .news-source {
+            background: #e8f4fd;
+            color: #3498db;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #e74c3c;
+            background: #fdf2f2;
+            border-radius: 10px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .refresh-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .refresh-btn:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .time-display {
+                font-size: 2em;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-tab {
+                margin: 0;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <!-- 头部时间显示 -->
+            <div class="header">
+                <div class="time-display">${currentTime}</div>
+                <div class="date-display">${currentDate}</div>
+                <div class="weather-display" v-if="weatherData.location">
+                    <div class="weather-info">
+                        <span class="location">${weatherData.location}</span>
+                        <span class="temperature">${weatherData.temperature}°C</span>
+                        <span class="weather-desc">${weatherData.weather_desc}</span>
+                    </div>
+                    <div class="weather-details">
+                        <span>湿度: ${weatherData.humidity}%</span>
+                        <span>风速: ${weatherData.wind_speed}m/s</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 导航标签 -->
+            <div class="nav-tabs">
+                <button 
+                    v-for="tab in tabs" 
+                    :key="tab.id"
+                    :class="['nav-tab', { active: activeTab === tab.id }]"
+                    @click="switchTab(tab.id)"
+                >
+                    ${tab.name}
+                </button>
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="content-section">
+                <button @click="refreshData" class="refresh-btn">
+                    刷新数据
+                </button>
+                
+                <div v-if="loading" class="loading">
+                    <h3>正在加载数据...</h3>
+                </div>
+                
+                <div v-else-if="error" class="error">
+                    <h3>加载失败</h3>
+                    <p>${error}</p>
+                </div>
+                
+                <div v-else class="news-grid">
+                    <div 
+                        v-for="item in currentData" 
+                        :key="item.title"
+                        class="news-card"
+                    >
+                        <div class="news-title">
+                            <a :href="item.link" target="_blank" rel="noopener">
+                                ${item.title}
+                            </a>
+                        </div>
+                        <div class="news-meta">
+                            <span class="news-source">${item.source}</span>
+                            <span>${formatTime(item.timestamp)}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            delimiters: ['${', '}'],
+            data() {
+                return {
+                    currentTime: '',
+                    currentDate: '',
+                    activeTab: 'news',
+                    loading: false,
+                    error: null,
+                    tabs: [
+                        { id: 'news', name: '综合新闻' },
+                        { id: 'tech', name: '科技新闻' },
+                        { id: 'finance', name: '财经新闻' }
+                    ],
+                    newsData: [],
+                    techData: [],
+                    financeData: [],
+                    weatherData: {
+                        location: '',
+                        temperature: '',
+                        weather_desc: '',
+                        humidity: '',
+                        wind_speed: '',
+                        wind_direction: '',
+                        message: ''
+                    }
+                }
+            },
+            computed: {
+                currentData() {
+                    switch(this.activeTab) {
+                        case 'news': return this.newsData;
+                        case 'tech': return this.techData;
+                        case 'finance': return this.financeData;
+                        default: return [];
+                    }
+                }
+            },
+            methods: {
+                updateTime() {
+                    const now = new Date();
+                    this.currentTime = now.toLocaleTimeString('zh-CN', {
+                        hour12: false,
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+                    this.currentDate = now.toLocaleDateString('zh-CN', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        weekday: 'long'
+                    });
+                },
+                switchTab(tabId) {
+                    this.activeTab = tabId;
+                    this.loadData();
+                },
+                async loadData() {
+                    this.loading = true;
+                    this.error = null;
+                    
+                    try {
+                        let response;
+                        switch(this.activeTab) {
+                            case 'news':
+                                response = await axios.get('/api/news');
+                                this.newsData = response.data.data || [];
+                                break;
+                            case 'tech':
+                                response = await axios.get('/api/tech');
+                                this.techData = response.data.data || [];
+                                break;
+                            case 'finance':
+                                response = await axios.get('/api/finance');
+                                this.financeData = response.data.data || [];
+                                break;
+                        }
+                    } catch (err) {
+                        this.error = '数据加载失败: ' + err.message;
+                        console.error('API Error:', err);
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                refreshData() {
+                    this.loadData();
+                },
+                async loadWeather() {
+                    try {
+                        const response = await axios.get('/api/weather');
+                        if (response.data.status === 'success') {
+                            this.weatherData = response.data.data;
+                        }
+                    } catch (err) {
+                        console.error('Weather API Error:', err);
+                    }
+                },
+                formatTime(timestamp) {
+                    if (!timestamp) return '';
+                    const date = new Date(timestamp);
+                    return date.toLocaleString('zh-CN', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+            },
+            mounted() {
+                // 更新时间
+                this.updateTime();
+                setInterval(this.updateTime, 1000);
+                
+                // 加载初始数据
+                this.loadData();
+                this.loadWeather();
+                
+                // 每5分钟自动刷新数据
+                setInterval(this.loadData, 5 * 60 * 1000);
+                
+                // 每30分钟刷新天气数据
+                setInterval(this.loadWeather, 30 * 60 * 1000);
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
