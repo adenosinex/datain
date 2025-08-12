@@ -18,11 +18,23 @@ datain/
 ├── config.py              # 配置文件
 ├── requirements.txt       # Python依赖
 ├── readme.md             # 项目说明
+├── data/                 # 数据文件
+│   └── bookmarks.json    # 书签数据
+├── static/               # 静态文件
+│   ├── css/
+│   │   └── style.css     # 样式文件
+│   └── js/
+│       └── app.js        # 前端逻辑
+├── utils/                # 工具模块
+│   ├── __init__.py
+│   └── bookmark_manager.py # 书签管理器
 ├── scrapers/             # 爬虫模块
 │   ├── __init__.py
 │   ├── news_scraper.py   # 综合新闻爬虫
 │   ├── tech_scraper.py   # 科技新闻爬虫
-│   └── finance_scraper.py # 财经新闻爬虫
+│   ├── finance_scraper.py # 财经新闻爬虫
+│   ├── weather_scraper.py # 天气爬虫
+│   └── sports_scraper.py # 体育新闻爬虫
 └── templates/            # 前端模板
     └── index.html        # 主页面
 ```
@@ -62,6 +74,7 @@ python app.py
 
 ## API接口
 
+### 新闻和天气API
 - `GET /api/time` - 获取实时时间
 - `GET /api/news` - 获取综合新闻
 - `GET /api/tech` - 获取科技新闻
@@ -70,6 +83,14 @@ python app.py
 - `GET /api/entertainment` - 获取娱乐新闻
 - `GET /api/weather` - 获取天气信息
 - `GET /api/weather/<lat>/<lon>` - 根据经纬度获取天气信息
+
+### 书签管理API
+- `GET /api/bookmarks` - 获取所有书签分类
+- `GET /api/bookmarks/all` - 获取所有书签（扁平化）
+- `GET /api/bookmarks/search?q=<query>` - 搜索书签
+- `GET /api/bookmarks/category/<category_id>` - 根据分类获取书签
+- `POST /api/bookmarks/add` - 添加书签
+- `POST /api/bookmarks/remove` - 删除书签
 
 ## 技术栈
 
@@ -94,6 +115,21 @@ python app.py
 2. 实现爬虫类和方法
 3. 在 `app.py` 中添加对应的API路由
 4. 在前端模板中添加新的标签页
+
+### 管理书签
+
+1. 编辑 `data/bookmarks.json` 文件添加或修改书签
+2. 书签按分类组织，每个分类包含：
+   - `id`: 分类唯一标识
+   - `name`: 分类名称
+   - `icon`: 分类图标
+   - `description`: 分类描述
+   - `bookmarks`: 书签列表
+3. 每个书签包含：
+   - `title`: 书签标题
+   - `url`: 书签链接
+   - `icon`: 书签图标
+   - `description`: 书签描述
 
 ### 自定义样式
 

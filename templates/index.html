@@ -34,18 +34,29 @@
             <!-- 书签分类区域 -->
             <div class="bookmarks-section">
                 <h3 class="section-title">📚 常用书签</h3>
-                <div class="bookmarks-grid">
-                    <a 
-                        v-for="bookmark in bookmarks" 
-                        :key="bookmark.url"
-                        :href="bookmark.url" 
-                        target="_blank" 
-                        rel="noopener"
-                        class="bookmark-item"
-                    >
-                        <span class="bookmark-icon">${bookmark.icon}</span>
-                        <span class="bookmark-title">${bookmark.title}</span>
-                    </a>
+                <div v-for="category in bookmarkCategories" :key="category.id" class="bookmark-category">
+                    <h4 class="category-title">
+                        <span class="category-icon">${category.icon}</span>
+                        <span class="category-name">${category.name}</span>
+                    </h4>
+                    <p class="category-description">${category.description}</p>
+                    <div class="bookmarks-grid">
+                        <a 
+                            v-for="bookmark in category.bookmarks" 
+                            :key="bookmark.url"
+                            :href="bookmark.url" 
+                            target="_blank" 
+                            rel="noopener"
+                            class="bookmark-item"
+                            :title="bookmark.description"
+                        >
+                            <span class="bookmark-icon">${bookmark.icon}</span>
+                            <div class="bookmark-info">
+                                <span class="bookmark-title">${bookmark.title}</span>
+                                <span class="bookmark-desc">${bookmark.description}</span>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
 

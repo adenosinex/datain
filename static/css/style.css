@@ -94,57 +94,111 @@ body {
     border-radius: 8px;
 }
 
-.bookmarks-section {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
-    padding: 25px;
-    margin-bottom: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-}
+        .bookmarks-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
 
-.section-title {
-    font-size: 1.5em;
-    color: #2c3e50;
-    margin-bottom: 20px;
-    text-align: center;
-    font-weight: 600;
-}
+        .section-title {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
 
-.bookmarks-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-}
+        .bookmark-category {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(248, 249, 250, 0.8);
+            border-radius: 12px;
+            border-left: 4px solid #3498db;
+        }
 
-.bookmark-item {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    text-decoration: none;
-    color: #2c3e50;
-    border-left: 4px solid #3498db;
-}
+        .bookmark-category:last-child {
+            margin-bottom: 0;
+        }
 
-.bookmark-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    background: #f8f9fa;
-}
+        .category-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
 
-.bookmark-item .bookmark-icon {
-    font-size: 1.5em;
-    margin-right: 12px;
-}
+        .category-icon {
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
 
-.bookmark-item .bookmark-title {
-    font-weight: 600;
-    font-size: 1em;
-}
+        .category-name {
+            color: #3498db;
+        }
+
+        .category-description {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .bookmarks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .bookmark-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #2c3e50;
+            border-left: 4px solid #3498db;
+        }
+
+        .bookmark-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            background: #f8f9fa;
+        }
+
+        .bookmark-item .bookmark-icon {
+            font-size: 1.5em;
+            margin-right: 12px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .bookmark-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .bookmark-item .bookmark-title {
+            font-weight: 600;
+            font-size: 1em;
+            color: #2c3e50;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .bookmark-item .bookmark-desc {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            line-height: 1.4;
+            display: block;
+        }
 
 .content-section {
     background: rgba(255, 255, 255, 0.95);
@@ -244,34 +298,47 @@ body {
 }
 
 /* 移动端响应式设计 */
-@media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
-    
-    .time-display {
-        font-size: 2em;
-    }
-    
-    .bookmarks-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 10px;
-    }
-    
-    .bookmark-item {
-        padding: 12px;
-    }
-    
-    .bookmark-item .bookmark-icon {
-        font-size: 1.3em;
-        margin-right: 8px;
-    }
-    
-    .bookmark-item .bookmark-title {
-        font-size: 0.9em;
-    }
-    
-    .news-grid {
-        grid-template-columns: 1fr;
-    }
-}
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .time-display {
+                font-size: 2em;
+            }
+            
+            .bookmark-category {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .category-title {
+                font-size: 1.1em;
+            }
+            
+            .bookmarks-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .bookmark-item {
+                padding: 12px;
+            }
+            
+            .bookmark-item .bookmark-icon {
+                font-size: 1.3em;
+                margin-right: 8px;
+            }
+            
+            .bookmark-item .bookmark-title {
+                font-size: 0.9em;
+            }
+            
+            .bookmark-item .bookmark-desc {
+                font-size: 0.75em;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }

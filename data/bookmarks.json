@@ -1,0 +1,176 @@
+{
+  "categories": [
+    {
+      "id": "news",
+      "name": "新闻与时事",
+      "icon": "📰",
+      "description": "全球新闻与时事资讯",
+      "bookmarks": [
+        {
+          "title": "BBC News",
+          "url": "https://www.bbc.com/news",
+          "icon": "🌍",
+          "description": "提供全球范围的新闻报道，涵盖政治、经济、社会等，内容客观且深度分析"
+        },
+        {
+          "title": "Reuters",
+          "url": "https://www.reuters.com",
+          "icon": "📊",
+          "description": "专注于国际新闻和财经报道，适合需要快速、可靠资讯的用户"
+        },
+        {
+          "title": "The Guardian",
+          "url": "https://www.theguardian.com/international",
+          "icon": "📰",
+          "description": "以深入报道和评论著称，覆盖文化、环境等多元话题"
+        },
+        {
+          "title": "BBC中文",
+          "url": "https://www.bbc.com/zhongwen/simp",
+          "icon": "🇨🇳",
+          "description": "BBC中文网，提供中文新闻资讯"
+        }
+      ]
+    },
+    {
+      "id": "tech",
+      "name": "科技与创新",
+      "icon": "💻",
+      "description": "科技趋势与创新资讯",
+      "bookmarks": [
+        {
+          "title": "TechCrunch",
+          "url": "https://techcrunch.com",
+          "icon": "🚀",
+          "description": "聚焦科技创业、产品发布和行业动态，适合关注科技趋势的用户"
+        },
+        {
+          "title": "Wired",
+          "url": "https://www.wired.com",
+          "icon": "🔬",
+          "description": "探讨科技、文化和未来的交叉，提供深度文章和前沿观点"
+        },
+        {
+          "title": "The Verge",
+          "url": "https://www.theverge.com",
+          "icon": "📱",
+          "description": "涵盖科技、娱乐和生活方式，内容生动且贴近年轻读者"
+        },
+        {
+          "title": "GitHub",
+          "url": "https://github.com",
+          "icon": "🐙",
+          "description": "全球最大的代码托管平台，开源项目聚集地"
+        },
+        {
+          "title": "Stack Overflow",
+          "url": "https://stackoverflow.com",
+          "icon": "💡",
+          "description": "程序员问答社区，技术问题解决方案"
+        }
+      ]
+    },
+    {
+      "id": "academic",
+      "name": "学术与知识",
+      "icon": "📚",
+      "description": "学术研究与知识资源",
+      "bookmarks": [
+        {
+          "title": "Wikipedia",
+          "url": "https://www.wikipedia.org",
+          "icon": "📖",
+          "description": "开源的知识库，覆盖几乎所有领域，适合快速查阅基础信息"
+        },
+        {
+          "title": "Google Scholar",
+          "url": "https://scholar.google.com",
+          "icon": "🎓",
+          "description": "学术文章搜索引擎，适合研究人员和学生查找论文"
+        },
+        {
+          "title": "JSTOR",
+          "url": "https://www.jstor.org",
+          "icon": "📚",
+          "description": "提供学术期刊和书籍，适合深入学术研究（部分内容需订阅）"
+        },
+        {
+          "title": "知乎",
+          "url": "https://www.zhihu.com",
+          "icon": "🤔",
+          "description": "中文问答社区，涵盖各领域知识分享"
+        }
+      ]
+    },
+    {
+      "id": "lifestyle",
+      "name": "生活方式与兴趣",
+      "icon": "🎨",
+      "description": "生活、文化与兴趣内容",
+      "bookmarks": [
+        {
+          "title": "Medium",
+          "url": "https://medium.com",
+          "icon": "✍️",
+          "description": "用户生成的内容平台，涵盖个人故事、职业建议和文化评论，内容多样"
+        },
+        {
+          "title": "National Geographic",
+          "url": "https://www.nationalgeographic.com",
+          "icon": "🌍",
+          "description": "专注于自然、科学和文化探索，图片和故事性强"
+        },
+        {
+          "title": "Reddit",
+          "url": "https://www.reddit.com",
+          "icon": "🤖",
+          "description": "社区驱动的讨论平台，覆盖从日常生活到冷门兴趣的各种话题"
+        },
+        {
+          "title": "B站",
+          "url": "https://www.bilibili.com",
+          "icon": "📺",
+          "description": "中国领先的视频网站，涵盖动画、游戏、科技等多元内容"
+        },
+        {
+          "title": "微博",
+          "url": "https://weibo.com",
+          "icon": "📱",
+          "description": "中国主流社交媒体平台，实时热点资讯"
+        },
+        {
+          "title": "豆瓣",
+          "url": "https://www.douban.com",
+          "icon": "📖",
+          "description": "图书、电影、音乐评论社区，文艺青年聚集地"
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "name": "数据与实用信息",
+      "icon": "📊",
+      "description": "数据分析和实用工具",
+      "bookmarks": [
+        {
+          "title": "Our World in Data",
+          "url": "https://ourworldindata.org",
+          "icon": "📈",
+          "description": "提供数据驱动的全球趋势分析，涵盖健康、环境、经济等"
+        },
+        {
+          "title": "Wolfram Alpha",
+          "url": "https://www.wolframalpha.com",
+          "icon": "🧮",
+          "description": "计算型知识引擎，适合查询数据、数学问题或事实核查"
+        },
+        {
+          "title": "Statista",
+          "url": "https://www.statista.com",
+          "icon": "📊",
+          "description": "提供统计数据和行业报告，适合商业和研究用户"
+        }
+      ]
+    }
+  ]
+}

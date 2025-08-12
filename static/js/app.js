@@ -9,15 +9,8 @@ createApp({
             currentDate: '',
             loading: false,
             error: null,
-            bookmarks: [
-                { title: 'GitHub', url: 'https://github.com', icon: '🐙' },
-                { title: 'Stack Overflow', url: 'https://stackoverflow.com', icon: '💻' },
-                { title: '知乎', url: 'https://zhihu.com', icon: '📚' },
-                { title: 'B站', url: 'https://bilibili.com', icon: '📺' },
-                { title: '卫报', url: 'https://www.theguardian.com/international?INTCMP=CE_INT', icon: '📱' },
-                { title: '路透社', url: 'https://www.reuters.com/world/china/', icon: '📖' },
-                { title: 'BBC', url: 'https://www.bbc.com/zhongwen/simp', icon: '🌍' }
-            ],
+            bookmarks: [],
+            bookmarkCategories: [],
             newsData: [],
             techData: [],
             financeData: [],
@@ -111,6 +104,27 @@ createApp({
                 this.loading = false;
             }
         },
+        async loadBookmarks() {
+            try {
+                const response = await axios.get('/api/bookmarks');
+                if (response.data.status === 'success') {
+                    this.bookmarkCategories = response.data.data;
+                    // 将所有书签扁平化到一个数组中
+                    this.bookmarks = [];
+                    this.bookmarkCategories.forEach(category => {
+                        category.bookmarks.forEach(bookmark => {
+                            this.bookmarks.push({
+                                ...bookmark,
+                                category: category.name,
+                                categoryIcon: category.icon
+                            });
+                        });
+                    });
+                }
+            } catch (err) {
+                console.error('加载书签失败:', err);
+            }
+        },
         refreshData() {
             this.loadData();
         },
@@ -135,19 +149,20 @@ createApp({
             });
         }
     },
-    mounted() {
-        // 更新时间
-        this.updateTime();
-        setInterval(this.updateTime, 1000);
-        
-        // 加载初始数据
-        this.loadData();
-        this.loadWeather();
-        
-        // 每5分钟自动刷新数据
-        setInterval(this.loadData, 5 * 60 * 1000);
-        
-        // 每30分钟刷新天气数据
-        setInterval(this.loadWeather, 30 * 60 * 1000);
-    }
+                mounted() {
+                // 更新时间
+                this.updateTime();
+                setInterval(this.updateTime, 1000);
+                
+                // 加载初始数据
+                this.loadData();
+                this.loadWeather();
+                this.loadBookmarks();
+                
+                // 每5分钟自动刷新数据
+                setInterval(this.loadData, 5 * 60 * 1000);
+                
+                // 每30分钟刷新天气数据
+                setInterval(this.loadWeather, 30 * 60 * 1000);
+            }
 }).mount('#app');
