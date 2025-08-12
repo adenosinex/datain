@@ -89,6 +89,20 @@
             color: #7f8c8d;
         }
 
+        .weather-forecast {
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .forecast-text {
+            font-size: 0.85em;
+            color: #e67e22;
+            font-style: italic;
+            background: rgba(230, 126, 34, 0.1);
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
         .nav-tabs {
             display: flex;
             justify-content: center;
@@ -259,7 +273,10 @@
                     </div>
                     <div class="weather-details">
                         <span>湿度: ${weatherData.humidity}%</span>
-                        <span>风速: ${weatherData.wind_speed}m/s</span>
+                        <span>风速: ${weatherData.wind_speed}</span>
+                    </div>
+                    <div class="weather-forecast" v-if="weatherData.forecast">
+                        <span class="forecast-text">${weatherData.forecast}</span>
                     </div>
                 </div>
             </div>
@@ -339,6 +356,7 @@
                         humidity: '',
                         wind_speed: '',
                         wind_direction: '',
+                        forecast: '',
                         message: ''
                     }
                 }

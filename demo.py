@@ -70,8 +70,9 @@ def demo_scrapers():
         print(f"温度: {data.get('temperature', 'N/A')}°C")
         print(f"天气: {data.get('weather_desc', 'N/A')}")
         print(f"湿度: {data.get('humidity', 'N/A')}%")
-        print(f"风速: {data.get('wind_speed', 'N/A')}m/s")
+        print(f"风速: {data.get('wind_speed', 'N/A')}")
         print(f"风向: {data.get('wind_direction', 'N/A')}")
+        print(f"预报: {data.get('forecast', 'N/A')}")
         print(f"消息: {data.get('message', 'N/A')}")
     else:
         print("暂无数据")

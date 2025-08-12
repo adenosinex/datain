@@ -69,6 +69,7 @@ def test_api_endpoints():
                 weather_info = data.get('data', {})
                 print(f"   地点: {weather_info.get('location', 'N/A')}")
                 print(f"   温度: {weather_info.get('temperature', 'N/A')}°C")
+                print(f"   预报: {weather_info.get('forecast', 'N/A')}")
         else:
             print(f"❌ 天气API失败: {response.status_code}")
     except Exception as e:
@@ -104,6 +105,7 @@ def test_scrapers():
         if weather_data.get('status') == 'success':
             print(f"   地点: {weather_data.get('data', {}).get('location', 'N/A')}")
             print(f"   温度: {weather_data.get('data', {}).get('temperature', 'N/A')}°C")
+            print(f"   预报: {weather_data.get('data', {}).get('forecast', 'N/A')}")
         
     except Exception as e:
         print(f"❌ 爬虫测试失败: {e}")

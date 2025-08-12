@@ -41,6 +41,7 @@ class WeatherScraper:
             # 移除JSONP回调函数包装
             json_str = re.search(r'getDataSK\((.*)\)', content)
             
+            
             if json_str:
                 weather_data = json.loads(json_str.group(1))
                 weather_data_less = json.loads(json_str2.group(1))
@@ -51,12 +52,12 @@ class WeatherScraper:
                     'data': {
                         'temperature': weather_data.get('temp', {}),
                         'humidity': weather_data.get('humidity', {}),
-                        'wind': weather_data.get('Wind', {}),
-                        'weather': weather_data.get('weather', {}),
+                        'wind_speed': weather_data.get('WS', {}),
+                        'weather_desc': weather_data.get('weather', {}),
                         'forecast': weather_data_less.get('msg', {}),
                         'timestamp': datetime.now().isoformat()
                     },
-                    'message': weather_data.get('msg', '获取天气信息成功')
+                    'message': 'success'
                 }
                 
                 return weather_info
@@ -84,12 +85,13 @@ class WeatherScraper:
                 return {
                     'status': 'success',
                     'data': {
-                        'location': data.get('location', {}).get('name', '未知地点'),
-                        'temperature': data.get('temperature', {}).get('value', 'N/A'),
-                        'weather_desc': data.get('weather', {}).get('desc', '未知'),
-                        'humidity': data.get('humidity', {}).get('value', 'N/A'),
-                        'wind_speed': data.get('wind', {}).get('speed', 'N/A'),
-                        'wind_direction': data.get('wind', {}).get('direction', 'N/A'),
+                        'location': '巫山',  # 默认地点
+                        'temperature': data.get('temperature', 'N/A'),
+                        'weather_desc': data.get('weather_desc', '未知'),
+                        'humidity': data.get('humidity', 'N/A'),
+                        'wind_speed': data.get('wind_speed', 'N/A'),
+                        'wind_direction': 'N/A',  # 暂时设为N/A
+                        'forecast': data.get('forecast', ''),
                         'message': weather_data.get('message', ''),
                         'timestamp': datetime.now().isoformat()
                     }
