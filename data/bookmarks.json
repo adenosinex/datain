@@ -8,13 +8,13 @@
       "bookmarks": [
         {
           "title": "BBC News",
-          "url": "https://www.bbc.com/news",
+          "url": "https://www.bbc.com/zhongwen/simp",
           "icon": "🌍",
           "description": "提供全球范围的新闻报道，涵盖政治、经济、社会等，内容客观且深度分析"
         },
         {
           "title": "Reuters",
-          "url": "https://www.reuters.com",
+          "url": "https://www.reuters.com/world/china/",
           "icon": "📊",
           "description": "专注于国际新闻和财经报道，适合需要快速、可靠资讯的用户"
         },
