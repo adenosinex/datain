@@ -6,8 +6,9 @@ from scrapers.news_scraper import news_scraper
 from scrapers.tech_scraper import tech_scraper
 from scrapers.finance_scraper import finance_scraper
 from scrapers.weather_scraper import weather_scraper
-from utils.bookmark_manager import bookmark_manager
+from scrapers.local_temp import get_home_temp
 
+from utils.bookmark_manager import bookmark_manager
 app = Flask(__name__)
 CORS(app)
 
@@ -57,6 +58,9 @@ def get_weather():
     """获取天气数据"""
     try:
         weather_data = weather_scraper.get_weather_simple()
+        weather_data_local = get_home_temp()
+        weather_data['data']['local_temp'] = weather_data_local
+        
         return jsonify(weather_data)
     except Exception as e:
         return jsonify({'error': str(e)}), 500

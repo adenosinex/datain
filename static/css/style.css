@@ -90,7 +90,15 @@ body {
     color: #e67e22;
     font-style: italic;
     background: rgba(230, 126, 34, 0.1);
-    padding: 4px 8px;
+    padding: 0px 8px;
+    border-radius: 8px;
+}
+.tip-text {
+    font-size: 0.85em;
+    color: black;
+    font-style: italic;
+    
+    padding: 0px 8px;
     border-radius: 8px;
 }
 

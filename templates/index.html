@@ -27,6 +27,10 @@
                     </div>
                     <div class="weather-forecast" v-if="weatherData.forecast">
                         <span class="forecast-text">${weatherData.forecast}</span>
+                        <br>
+                        <span class="tip-text">${weatherData.local_temp}</span>
+                        <br>
+                        <span class="tip-text">${weatherData.now}</span>
                     </div>
                 </div>
             </div>
