@@ -1,3 +1,4 @@
+import time
 import requests
 import json
 import re
@@ -93,7 +94,8 @@ class WeatherScraper:
                         'wind_direction': 'N/A',  # 暂时设为N/A
                         'forecast': data.get('forecast', ''),
                         'message': weather_data.get('message', ''),
-                        'timestamp': datetime.now().isoformat()
+                        'timestamp': datetime.now().isoformat(),
+                        'now': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                     }
                 }
             else:
