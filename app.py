@@ -7,7 +7,8 @@ from scrapers.tech_scraper import tech_scraper
 from scrapers.finance_scraper import finance_scraper
 from scrapers.weather_scraper import weather_scraper
 from scrapers.local_temp import get_home_temp
-
+from utils.ride import msg
+ 
 from utils.bookmark_manager import bookmark_manager
 app = Flask(__name__)
 CORS(app)
@@ -62,6 +63,16 @@ def get_weather():
         weather_data['data']['local_temp'] = weather_data_local
         
         return jsonify(weather_data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+@app.route('/api/gps')
+def get_gps():
+    """获取天气数据"""
+    try:
+        gps_data = {'msg':msg()}
+         
+        
+        return jsonify({'data':gps_data})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

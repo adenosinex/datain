@@ -15,6 +15,12 @@
             <div class="header">
                 <div class="time-display">${currentTime}</div>
                 <div class="date-display">${currentDate}</div>
+                <div class="weather-display">
+                     <div class="weather-forecast"  >
+                      
+                        <span class="tip-text">${gpsData.msg}</span>
+                    </div>
+                </div>
                 <div class="weather-display" v-if="weatherData.location">
                     <div class="weather-info">
                         <span class="location">${weatherData.location}</span>

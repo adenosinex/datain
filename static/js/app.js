@@ -25,6 +25,9 @@ createApp({
                 wind_direction: '',
                 forecast: '',
                 message: ''
+            },
+            gpsData: {
+                msg:''
             }
         }
     },
@@ -138,6 +141,18 @@ createApp({
                 console.error('Weather API Error:', err);
             }
         },
+        async loadGps() {
+            try {
+                
+                const response = await axios.get('/api/gps');
+                if (response.status === 200) {
+                    this.gpsData = response.data.data;
+                    console.log('GPS Data:', this.gpsData);
+                }
+            } catch (err) {
+                console.error('Gps API Error:', err);
+            }
+        },
         formatTime(timestamp) {
             if (!timestamp) return '';
             const date = new Date(timestamp);
@@ -157,6 +172,7 @@ createApp({
                 // 加载初始数据
                 this.loadData();
                 this.loadWeather();
+                this.loadGps();
                 this.loadBookmarks();
                 
                 // 每5分钟自动刷新数据
