@@ -147,7 +147,7 @@ createApp({
                 const response = await axios.get('/api/gps');
                 if (response.status === 200) {
                     this.gpsData = response.data.data;
-                    console.log('GPS Data:', this.gpsData);
+                
                 }
             } catch (err) {
                 console.error('Gps API Error:', err);

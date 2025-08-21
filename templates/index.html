@@ -10,15 +10,16 @@
 </head>
 <body>
     <div id="app">
+        
         <div class="container">
             <!-- 头部时间显示 -->
             <div class="header">
                 <div class="time-display">${currentTime}</div>
-                <div class="date-display">${currentDate}</div>
+                <a target="_blank" style="text-decoration: none;" href="http://192.168.31.12:82"><div class="date-display">${currentDate}</div></a>
                 <div class="weather-display">
                      <div class="weather-forecast"  >
                       
-                        <span class="tip-text">${gpsData.msg}</span>
+                        <span class="tip-text" v-html="gpsData.msg"> </span>
                     </div>
                 </div>
                 <div class="weather-display" v-if="weatherData.location">
