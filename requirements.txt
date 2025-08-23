@@ -6,3 +6,5 @@ lxml
 pytz 
 selenium  
 fake-useragent 
+ 
+gunicorn 
