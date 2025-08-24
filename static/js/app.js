@@ -28,7 +28,10 @@ createApp({
             },
             gpsData: {
                 msg:''
-            }
+            },
+            miData: {
+                msg:''
+            },
         }
     },
     computed: {
@@ -153,6 +156,18 @@ createApp({
                 console.error('Gps API Error:', err);
             }
         },
+        async loadmipad() {
+            try {
+                
+                const response = await axios.get('/api/mi');
+                if (response.status === 200) {
+                    this.miData  = response.data.data;
+                
+                }
+            } catch (err) {
+                console.error('Gps API Error:', err);
+            }
+        },
         formatTime(timestamp) {
             if (!timestamp) return '';
             const date = new Date(timestamp);
@@ -173,6 +188,7 @@ createApp({
                 this.loadData();
                 this.loadWeather();
                 this.loadGps();
+                this.loadmipad();
                 this.loadBookmarks();
                 
                 // 每5分钟自动刷新数据
