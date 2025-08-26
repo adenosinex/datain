@@ -30,8 +30,10 @@ def run_getpercrnt():
 
     # === 注意：必须保持登录状态 ===
     # cookies 从浏览器中获取（关键！）
-    cookies = open("data/mi_cookie.txt").read()
-    headers["cookie"] = cookies
+    COOKIE_FILE="data/mi_cookie.txt"
+    with open(COOKIE_FILE, "r", encoding="utf-8") as f:
+        cookies = json.load(f)
+    headers["cookie"] = "; ".join([f"{key}={value}" for key, value in cookies.items()])
     # === 发送请求 ===
     session = requests.Session()
     session.headers.update(headers)
@@ -73,6 +75,8 @@ def run_getpercrnt():
         print(f"❌ 网络错误: {e}")
     except Exception as e:
         print(f"❌ 解析错误: {e}")
+    return "获取失败 mi cookie失效"
+ 
 
 if __name__ == "__main__":
     run_getpercrnt()
