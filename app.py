@@ -263,6 +263,9 @@ def main():
 def back_run():
     from scrapers.mi_keeplogin import start_refresher
     start_refresher()
+ 
+    from utils.spider import start_spider
+    start_spider()
 if __name__ == '__main__':
     back_run()
     main()
