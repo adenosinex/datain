@@ -33,6 +33,8 @@ createApp({
             miData: {
                 msg:''
             },
+            inputUrl: '',
+            fetchHtmlTime: null // 新增：抓取耗时
         }
     },
     computed: {
@@ -166,21 +168,24 @@ createApp({
             alert('操作失败: ' + err.message);
         }
     },
-         async fetchHtml(text) {
+         async fetchHtml(url) {
+        if (!/^https?:\/\//.test(url)) {
+            alert('请输入有效的URL（以 http/https 开头）');
+            return;
+        }
+        this.fetchHtmlTime = null;
+        const start = performance.now();
         try {
-            // 读取剪贴板内容
-            
-            if (!/^https?:\/\//.test(text)) {
-                alert('剪贴板内容不是有效的URL');
-                return;
-            }
-            const res = await axios.post('/api/fetch_html', { url: text });
+            const res = await axios.post('/api/fetch_html', { url });
+            const end = performance.now();
+            this.fetchHtmlTime = ((end - start) / 1000).toFixed(2); // 秒
             if (res.data.status === 'success') {
                 this.fetchedHtml = res.data.html;
             } else {
                 alert('抓取失败: ' + (res.data.error || '未知错误'));
             }
         } catch (err) {
+            this.fetchHtmlTime = null;
             alert('操作失败: ' + err.message);
         }
     },

@@ -51,6 +51,9 @@
                     <button @click="fetchHtml(inputUrl)"
                         class="fetch-html-btn px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">抓取HTML</button>
                 </div>
+                <div v-if="fetchHtmlTime" class="text-xs text-gray-500 mb-2">
+                    抓取耗时：${fetchHtmlTime} 秒
+                </div>
                 <div v-if="fetchedHtml" class="mt-2">
                     <textarea v-model="fetchedHtml" rows="10"
                         class="w-full border rounded p-2 text-xs font-mono bg-gray-50"></textarea>
