@@ -184,12 +184,75 @@ createApp({
             alert('操作失败: ' + err.message);
         }
     },
-    copyHtmlText() {
-        if (!this.fetchedHtml) return;
-        navigator.clipboard.writeText(this.fetchedHtml)
-            .then(() => alert('已复制到剪贴板'))
-            .catch(() => alert('复制失败'));
-    },
+async copyHtmlText() {
+  const text = this.fetchedHtml;
+
+  // 1. 基础校验
+  if (!text || typeof text !== 'string') {
+    this.showFeedback('暂无内容可复制');
+    return;
+  }
+
+  // 2. 优先尝试现代 Clipboard API
+  if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(text);
+      this.showFeedback('✅ 已复制到剪贴板');
+      return;
+    } catch (err) {
+      console.warn('Clipboard API 失败，尝试 execCommand:', err);
+      // 失败后降级到 execCommand
+    }
+  }
+
+  // 3. 降级方案：execCommand（兼容旧浏览器）
+  try {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    // 隐藏 textarea
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+
+    // 选中并复制
+    textarea.select();
+    document.execCommand('copy');
+
+    // 清理
+    document.body.removeChild(textarea);
+
+    this.showFeedback('✅ 已复制到剪贴板（兼容模式）');
+  } catch (err) {
+    console.error('execCommand 复制失败:', err);
+    this.showFeedback('❌ 复制失败，请手动选择复制');
+  }
+},
+
+// 封装反馈方法（可替换为 Toast、Snackbar 等 UI 组件）
+showFeedback(message) {
+  // 方案1：仍用 alert（简单但体验差）
+  // alert(message);
+
+  // 方案2：推荐使用轻量提示（如基于 DOM 的 Toast）
+  const toast = document.createElement('div');
+  toast.style.cssText = `
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    background: #333; color: white; padding: 10px 20px; border-radius: 4px;
+    font-size: 14px; z-index: 9999; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    opacity: 0; transition: opacity 0.3s;
+  `;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  // 淡入
+  setTimeout(() => (toast.style.opacity = '1'), 100);
+  // 淡出并移除
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => document.body.removeChild(toast), 300);
+  }, 2000);
+},
         
         async loadmipad() {
             try {
