@@ -5,6 +5,7 @@ createApp({
     delimiters: ['${', '}'],
     data() {
         return {
+            fetchedHtml: '',
             currentTime: '',
             currentDate: '',
             loading: false,
@@ -153,6 +154,39 @@ createApp({
                 console.error('Gps API Error:', err);
             }
         },
+         async fetchClipboardHtml() {
+        try {
+            // 读取剪贴板内容
+            const text = await navigator.clipboard.readText();
+            this.fetchHtml(text);
+        } catch (err) {
+            alert('操作失败: ' + err.message);
+        }
+    },
+         async fetchHtml(text) {
+        try {
+            // 读取剪贴板内容
+            
+            if (!/^https?:\/\//.test(text)) {
+                alert('剪贴板内容不是有效的URL');
+                return;
+            }
+            const res = await axios.post('/api/fetch_html', { url: text });
+            if (res.data.status === 'success') {
+                this.fetchedHtml = res.data.html;
+            } else {
+                alert('抓取失败: ' + (res.data.error || '未知错误'));
+            }
+        } catch (err) {
+            alert('操作失败: ' + err.message);
+        }
+    },
+    copyHtmlText() {
+        if (!this.fetchedHtml) return;
+        navigator.clipboard.writeText(this.fetchedHtml)
+            .then(() => alert('已复制到剪贴板'))
+            .catch(() => alert('复制失败'));
+    },
         formatTime(timestamp) {
             if (!timestamp) return '';
             const date = new Date(timestamp);

@@ -41,7 +41,24 @@
                     </div>
                 </div>
             </div>
-
+  <button @click="fetchClipboardHtml" class="fetch-html-btn">抓取剪贴板URL的HTML</button>
+    <div v-if="fetchedHtml">
+        <h4>抓取到的HTML：</h4>
+        <textarea v-model="fetchedHtml" rows="10" style="width:100%"></textarea>
+        <button @click="copyHtmlText">复制HTML文本</button>
+    </div>
+            <!-- 新增：URL输入抓取HTML区域 -->
+            <div class="fetch-html-section" style="margin: 20px 0;">
+    <h4>网页源码抓取</h4>
+    <div style="display: flex; gap: 8px; align-items: center;">
+        <input v-model="inputUrl" type="text" placeholder="请输入网页URL" style="flex:1; padding:6px; border-radius:4px; border:1px solid #ccc;">
+        <button @click="fetchHtml(inputUrl)" class="fetch-html-btn">抓取HTML</button>
+    </div>
+    <div v-if="fetchedHtml" style="margin-top:10px;">
+        <textarea v-model="fetchedHtml" rows="10" style="width:100%; border-radius:4px; border:1px solid #ccc;"></textarea>
+        <button @click="copyHtmlText" style="margin-top:6px;">复制HTML文本</button>
+    </div>
+</div>
             <!-- 书签分类区域 -->
             <div class="bookmarks-section">
                 <a href="http://192.168.31.12" target="_blank" style="text-decoration: none;"> 

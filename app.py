@@ -1,3 +1,7 @@
+import os
+import sqlite3
+import threading
+import time
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 import datetime
@@ -8,11 +12,32 @@ from scrapers.finance_scraper import finance_scraper
 from scrapers.weather_scraper import weather_scraper
 from scrapers.local_temp import get_home_temp
 from utils.ride import msg
- 
+from utils.spider import  StealthBrowser
 from utils.bookmark_manager import bookmark_manager
 app = Flask(__name__)
 CORS(app)
 
+from utils.memorydb import InMemoryURLDB
+
+db=InMemoryURLDB(r'utils\urlcontent.db')
+
+ 
+# 模拟耗时任务
+def long_running_task(task_id):
+    print(f"任务 {task_id} 开始执行...")
+    # global spider
+    # spider = StealthBrowser(headless=True)
+    print(f"任务 {task_id} 执行完成")
+ 
+def start_task():
+    # 获取任务ID或其他参数
+    task_id = 123
+
+    # 🔥 开启新线程执行耗时任务
+    thread = threading.Thread(target=long_running_task, args=(task_id,))
+    thread.daemon = True  # 主程序退出时，线程也自动退出
+    thread.start()
+start_task()
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -186,10 +211,26 @@ def remove_bookmark():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+import requests
 
-import os
- 
-from app import app
+@app.route('/api/fetch_html', methods=['POST'])
+def fetch_html():
+    """根据URL获取HTML源码"""
+    try:
+        data = request.get_json()
+        url = data.get('url')
+        if not url:
+            return jsonify({'error': '缺少URL参数'}), 400
+        db.set_url(url)
+        now=time.time()
+        while time.time()-now<5:
+            html=db.get_content(url)
+            if html:
+                break
+            time.sleep(0.5)
+        return jsonify({'status': 'success', 'html': html})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 def main():
     """主函数"""
