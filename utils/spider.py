@@ -1,3 +1,4 @@
+import threading
 import time
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
@@ -57,14 +58,11 @@ class StealthBrowser:
             print("❌ 关闭浏览器失败:", e)
 
 
-# =======================
-# 使用示例
-# =======================
-if __name__ == "__main__":
+def run_spider():
     bot = StealthBrowser(headless=True)
 
     url = "https://zhuanlan.zhihu.com/p/15865355450"
-    from   memorydb import InMemoryURLDB
+    from  utils.memorydb import InMemoryURLDB
     db= InMemoryURLDB(r'utils\urlcontent.db')
     while True:
         url=db.get_url()
@@ -78,3 +76,25 @@ if __name__ == "__main__":
             print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),"没有待处理的 URL，等待5秒...")
         time.sleep(0.5)
     bot.quit()
+
+# 线程控制
+refresh_thread = None
+stop_event = threading.Event()
+
+def start_spider():
+    """启动后台刷新线程"""
+    global refresh_thread
+    if refresh_thread and refresh_thread.is_alive():
+        print("🔄 spider线程已在运行")
+        return
+
+    stop_event.clear()
+    refresh_thread = threading.Thread(target=run_spider, daemon=True)
+    refresh_thread.start()
+    print("🚀 已启动 spider 自动刷新守护线程")
+
+# =======================
+# 使用示例
+# =======================
+if __name__ == "__main__":
+    run_spider()
