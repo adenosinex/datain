@@ -190,7 +190,7 @@ createApp({
             .then(() => alert('已复制到剪贴板'))
             .catch(() => alert('复制失败'));
     },
-        },
+        
         async loadmipad() {
             try {
                 
@@ -232,4 +232,5 @@ createApp({
                 // 每30分钟刷新天气数据
                 setInterval(this.loadWeather, 30 * 60 * 1000);
             }
+    
 }).mount('#app');
