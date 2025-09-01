@@ -261,8 +261,8 @@ def main():
         threaded=True
     )
 def back_run():
-    from scrapers.mi_keeplogin import start_refresher
-    start_refresher()
+    # from scrapers.mi_keeplogin import start_refresher
+    # start_refresher()
  
     from utils.spider import start_spider
     start_spider()

@@ -2,8 +2,8 @@ import threading
 import time
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
-import traceback
-
+import traceback 
+# playwright install 
 
 class StealthBrowser:
     def __init__(self, headless=True):
@@ -64,7 +64,10 @@ def run_spider():
     url = "https://zhuanlan.zhihu.com/p/15865355450"
     from  utils.memorydb import InMemoryURLDB
     db= InMemoryURLDB(r'utils\urlcontent.db')
+    cnt=0
+    stop_t=0.5
     while True:
+        cnt+=stop_t
         url=db.get_url()
         if url:
             text = bot.get_text(url)
@@ -73,8 +76,9 @@ def run_spider():
 
             db.complete_content(url, text)
         else:
-            print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),"没有待处理的 URL，等待5秒...")
-        time.sleep(0.5)
+            if int(cnt)%10==0 and cnt>10:
+                print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),"没有待处理的 URL，等待5秒...")
+        time.sleep(stop_t)
     bot.quit()
 
 # 线程控制
