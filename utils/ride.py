@@ -68,7 +68,7 @@ def get_mile():
         if current < data["last_mileage"]:
             # 新统计周期
             data["total_mileage"] += current
-        elif current == data["last_mileage"]:
+        elif current == data["last_mileage"] and data["total_mileage"]<data["last_mileage"]:
             data["total_mileage"]  = current
         else:
             # 正常累加
@@ -87,7 +87,9 @@ def check_login():
         return False
     return True
 def msg():
-    start_distance_km = 153
+    # 上次节点
+    start_distance_km = 867
+    # 胎压规律
     psi_start = 50
     psi_after_a = 41
     psi_after_b = 39

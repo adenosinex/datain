@@ -76,7 +76,7 @@ def run_spider():
 
             db.complete_content(url, text)
         else:
-            if int(cnt)%10==0 and cnt>10:
+            if int(cnt)%60==0 and cnt>10:
                 print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),"没有待处理的 URL，等待5秒...")
         time.sleep(stop_t)
     bot.quit()
