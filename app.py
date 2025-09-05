@@ -252,14 +252,28 @@ def daily_stats_page():
 def api_daily_stats():
     if request.method == 'POST':
         data = request.get_json()
+        # 后端自动生成北京时间
+        tz = pytz.timezone('Asia/Shanghai')
+        now = datetime.datetime.now(tz)
+        time_str = now.strftime('%Y-%m-%d %H:%M:%S')
         add_record(
             data['project'],
-            data['time'], 
+            time_str,
             data.get('remark', ''),
             data.get('count', None)
         )
         return jsonify({'status': 'ok'})
     return jsonify(get_stats())
+
+@app.route('/api/daily_stats/<int:record_id>', methods=['DELETE'])
+def delete_daily_record(record_id):
+    import sqlite3
+    conn = sqlite3.connect("data/daily_stats.db")
+    c = conn.cursor()
+    c.execute("DELETE FROM stats WHERE id=?", (record_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({'status': 'ok'})
 
 def main():
     """主函数"""

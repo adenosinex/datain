@@ -3,18 +3,9 @@ import os
 import sqlite3
 from datetime import datetime
 
-DATA_FILE = "data/daily_stats.json"
-DB_FILE = "data/daily_stats.db"
-
-def load_stats():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as f:
-            return json.load(f)
-    return {}
-
-def save_stats(stats):
-    with open(DATA_FILE, "w") as f:
-        json.dump(stats, f)
+ 
+DB_FILE = r"C:\Users\xin\OneDrive\sqlite\daily_stats.db"
+ 
 
 def init_db():
     conn = sqlite3.connect(DB_FILE)
@@ -44,14 +35,15 @@ def get_stats():
     init_db()
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-    c.execute("SELECT time, project, count, remark FROM stats ORDER BY time DESC")
+    c.execute("SELECT id, time, project, count, remark FROM stats ORDER BY time DESC")
     rows = c.fetchall()
     conn.close()
     stats = []
-    for time, project, count, remark in rows:
+    for id, time, project, count, remark in rows:
         stats.append({
-            "date": time[:10],      # 提取日期
-            "time": time[11:],      # 提取时分秒
+            "id": id,
+            "date": time[:10],
+            "time": time[11:],
             "project": project,
             "count": count if count is not None else "",
             "remark": remark
