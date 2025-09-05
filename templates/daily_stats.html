@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>日常项目统计</title>
+    <script src="/static/cdn/vue3.5.global.js"></script>
+    <script src="/static/cdn/axios1.1.min.js"></script>
+    <script src="/static/cdn/chart.min.3.9.1.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<div id="app" class="max-w-xl mx-auto mt-8 p-6 bg-white rounded-lg shadow">
+    <h2 class="text-2xl font-bold mb-4 text-blue-700">日常项目统计</h2>
+    <div class="flex gap-4 mb-6">
+        <select v-model="project" class="px-4 py-1 rounded bg-gray-100 text-gray-700 hover:bg-blue-100">
+            <option v-for="pp in allProjects" :key="pp" :value="pp">${pp}</option>
+        </select>
+    </div>
+    <form @submit.prevent="addRecord" class="flex flex-col gap-3 mb-6">
+       
+        <div v-if="project==='ejec'" class="flex gap-2 items-center">
+            <span class="text-lg text-blue-700">ejec</span>
+            <input type="number" v-model="count" min="1" class="w-20 px-2 py-1 border rounded" placeholder="次数">
+            <span class="text-gray-400">高频：</span>
+            <button v-for="n in squatOptions" :key="n" type="button"
+                @click="quickSquat(n)"
+                class="px-2 py-1 bg-blue-100 rounded hover:bg-blue-300 text-blue-700 text-sm">${ n  }</button>
+            <input v-model="remark" class="flex-1 px-2 py-1 border rounded" placeholder="备注（可选）">
+            <button type="submit" class="px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition">记录</button>
+        </div>
+         <div v-else  class="flex gap-2 items-center">
+            <span class="text-lg text-green-700">downm</span>
+            <input v-model="remark" class="flex-1 px-2 py-1 border rounded" placeholder="备注（可选）">
+            <button type="submit" class="px-4 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition">记录</button>
+        </div>
+    </form>
+    <canvas id="statsChart" height="180" class="mb-6"></canvas>
+    <div v-if="todayStats" class="mb-4">
+        <h3 class="text-lg font-semibold mb-2 text-green-700">今日统计</h3>
+        <ul>
+            <li v-for="item in todayList" class="mb-1">
+                <span class="font-bold">${item.project}</span>
+                <span v-if="item.project==='ejec'" class="text-blue-700 ml-1">${item.count}次</span>
+                <span class="text-gray-500 ml-2">${item.time}</span>
+                <span v-if="item.remark" class="text-gray-400 ml-2">(${item.remark})</span>
+                <span v-if="item.project==='downm'" class="text-orange-500 ml-2">(${poopOffsetMinutes(item.time)})</span>
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+const { createApp } = Vue;
+createApp({
+     delimiters: ['${', '}'],
+    data() {
+        return {
+            project: "downm",
+            count: 30,
+            remark: "",
+            stats: [],
+            squatOptions: [4,5,6,7],
+            allProjects: ["downm", "ejec","mountain-15"]
+        }
+    },
+    computed: {
+        todayList() {
+            const today = new Date().toISOString().slice(0,10);
+            return this.stats.filter(item => item.date === today);
+        },
+        avgPoopMinutes() {
+            // 取今日所有downm时间，转为分钟
+            const poops = this.todayList.filter(i => i.project === 'downm');
+            if (!poops.length) return null;
+            const times = poops.map(i => {
+                const [h, m, s] = i.time.split(':').map(Number);
+                return h * 60 + m + s / 60;
+            });
+            return times.reduce((a,b)=>a+b,0) / times.length;
+        }
+    },
+    methods: {
+        projectBtnClass(p) {
+            return "px-4 py-1 rounded " + (this.project===p ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-blue-100");
+        },
+        async fetchStats() {
+            const res = await axios.get('/api/daily_stats');
+            this.stats = res.data;
+            // 自动提取所有项目
+            // this.allProjects = [...new Set(this.stats.map(i=>i.project))];
+            this.drawChart();
+        },
+        async addRecord() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('zh-CN', { hour12: false }) + ' ' + now.toISOString().slice(0,10);
+            let payload = {
+                project: this.project,
+                time: now.toISOString().slice(0,19).replace('T',' '),
+                remark: this.remark
+            };
+            if (this.project === 'ejec') payload.count = this.count;
+            await axios.post('/api/daily_stats', payload);
+            this.remark = "";
+            if (this.project === 'ejec') this.count = 30;
+            this.fetchStats();
+        },
+        async quickSquat(n) {
+            this.count = n;
+            this.remark = "";
+            await this.addRecord();
+        },
+        poopOffsetMinutes(time) {
+            if (this.avgPoopMinutes === null) return '';
+            const [h, m, s] = time.split(':').map(Number);
+            const t = h * 60 + m + s / 60;
+            const offset = t - this.avgPoopMinutes;
+            return (offset > 0 ? '+' : '') + offset.toFixed(1) + '分钟';
+        },
+        drawChart() {
+            const labels = [...new Set(this.stats.map(i=>i.date))];
+            const squatData = labels.map(d => this.stats.filter(i=>i.date===d && i.project==='ejec').reduce((a,b)=>a+b.count,0));
+            const poopData = labels.map(d => this.stats.filter(i=>i.date===d && i.project==='downm').length);
+            const ctx = document.getElementById('statsChart').getContext('2d');
+            if (window.statsChart && typeof window.statsChart.destroy === 'function') {
+                window.statsChart.destroy();
+            }
+            window.statsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        { label: 'ejec总次数', data: squatData, borderColor: 'blue', fill: false },
+                        { label: 'downm次数', data: poopData, borderColor: 'green', fill: false }
+                    ]
+                }
+            });
+        }
+    },
+    mounted() {
+        this.fetchStats();
+    }
+}).mount('#app');
+</script>
+</body>
+</html>

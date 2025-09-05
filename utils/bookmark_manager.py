@@ -11,7 +11,7 @@ class BookmarkManager:
             bookmarks_file: 书签数据文件路径
         """
         self.bookmarks_file = bookmarks_file
-        self._bookmarks_data = None
+        self._bookmarks_data = None 
     
     def load_bookmarks(self) -> Dict:
         """

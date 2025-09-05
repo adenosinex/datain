@@ -15,6 +15,7 @@ from utils.ride import msg
 from scrapers.mipad import run_getpercrnt
 from utils.spider import  StealthBrowser
 from utils.bookmark_manager import bookmark_manager
+from utils.daily_stats import add_record, get_stats
 app = Flask(__name__)
 CORS(app)
 
@@ -242,6 +243,23 @@ def fetch_html():
         return jsonify({'status': 'success', 'html': html})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+ 
+@app.route('/daily_stats')
+def daily_stats_page():
+    return render_template('daily_stats.html')
+
+@app.route('/api/daily_stats', methods=['GET', 'POST'])
+def api_daily_stats():
+    if request.method == 'POST':
+        data = request.get_json()
+        add_record(
+            data['project'],
+            data['time'], 
+            data.get('remark', ''),
+            data.get('count', None)
+        )
+        return jsonify({'status': 'ok'})
+    return jsonify(get_stats())
 
 def main():
     """主函数"""

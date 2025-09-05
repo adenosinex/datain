@@ -1,6 +1,21 @@
 {
   "categories": [
     {
+      "id": "me",
+      "name": "本地服务",
+      "icon": "📰",
+      "description": "个人服务",
+      "bookmarks": [
+        {
+          "title": "Down eject",
+          "url": "/daily_stats",
+          "icon": "🌍",
+          "description": "快捷记录"
+        } 
+         
+      ]
+    },
+    {
       "id": "news",
       "name": "新闻与时事",
       "icon": "📰",
