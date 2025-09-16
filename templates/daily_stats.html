@@ -5,8 +5,8 @@
     <title>日常项目统计</title>
     <script src="/static/cdn/vue3.5.global.js"></script>
     <script src="/static/cdn/axios1.1.min.js"></script>
+    <script src="/static/cdn/tailwindcss3.4.js"></script>
     <script src="/static/cdn/chart.min.3.9.1.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
 <div id="app" class="max-w-xl mx-auto mt-8 p-6 bg-white rounded-lg shadow">
@@ -97,7 +97,16 @@ createApp({
         },
         async fetchStats() {
             const res = await axios.get('/api/daily_stats');
-            this.stats = res.data;
+            let data=res.data
+            data.sort((a, b) => {
+  // 第一优先级：日期
+  const dateDiff = `${b.date} ${b.time}`.localeCompare(`${a.date} ${a.time}`);
+  if (dateDiff !== 0) return -dateDiff;
+  
+  // 第二优先级：project字母顺序
+  return -a.project.localeCompare(b.project);
+});
+            this.stats = data;
             // 自动提取所有项目
             // this.allProjects = [...new Set(this.stats.map(i=>i.project))];
             this.drawChart();

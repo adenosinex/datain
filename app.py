@@ -11,11 +11,11 @@ from scrapers.tech_scraper import tech_scraper
 from scrapers.finance_scraper import finance_scraper
 from scrapers.weather_scraper import weather_scraper
 from scrapers.local_temp import get_home_temp
-from utils.ride import msg
+from utils.ride import msg 
 from scrapers.mipad import run_getpercrnt
 from utils.spider import  StealthBrowser
 from utils.bookmark_manager import bookmark_manager
-from utils.daily_stats import add_record, get_stats
+from utils.daily_stats import add_record, get_stats,delete_record
 app = Flask(__name__)
 CORS(app)
 
@@ -233,7 +233,9 @@ def fetch_html():
         url = data.get('url')
         if not url:
             return jsonify({'error': '缺少URL参数'}), 400
+        db.delete_url(url)
         db.set_url(url)
+
         now=time.time()
         while time.time()-now<5:
             html=db.get_content(url)
@@ -267,12 +269,7 @@ def api_daily_stats():
 
 @app.route('/api/daily_stats/<int:record_id>', methods=['DELETE'])
 def delete_daily_record(record_id):
-    import sqlite3
-    conn = sqlite3.connect("data/daily_stats.db")
-    c = conn.cursor()
-    c.execute("DELETE FROM stats WHERE id=?", (record_id,))
-    conn.commit()
-    conn.close()
+    success = delete_record(record_id)
     return jsonify({'status': 'ok'})
 
 def main():
@@ -292,12 +289,18 @@ def main():
         debug=True,
         threaded=True
     )
+
+
+
 def back_run():
     # from scrapers.mi_keeplogin import start_refresher
     # start_refresher()
  
     from utils.spider import start_spider
     start_spider()
+    from utils.auto_request import run_auto_request
+    run_auto_request()
+    
 if __name__ == '__main__':
     back_run()
     main()

@@ -11,6 +11,24 @@
           "url": "/daily_stats",
           "icon": "🌍",
           "description": "快捷记录"
+        } ,
+        {
+          "title": "无氧项目",
+          "url": "https://snake.zin6.dpdns.org/",
+          "icon": "🌍",
+          "description": "快捷记录"
+        } ,
+        {
+          "title": "one 测速",
+          "url": "http://192.168.31.137:3300/",
+          "icon": "🌍",
+          "description": "homebox"
+        } ,
+        {
+          "title": "nas 测速",
+          "url": "http://192.168.31.82:3300/",
+          "icon": "🌍",
+          "description": "homebox"
         } 
          
       ]
