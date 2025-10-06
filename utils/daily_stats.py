@@ -22,8 +22,11 @@ def init_db():
     ''')
     conn.commit()
     conn.close()
-
+last_add=0
 def add_record(project, addtime, remark="", count=None):
+    global last_add
+    if last_add==addtime:
+        return
     init_db()
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
@@ -33,13 +36,14 @@ def add_record(project, addtime, remark="", count=None):
         timstrap=datetime.strptime(r[0],'%Y-%m-%d %H:%M:%S')
         time_new=datetime.strptime( addtime,'%Y-%m-%d %H:%M:%S' )
         td=time_new.timestamp()-timstrap.timestamp()
-        if r and td<10:
+        if  td<10:
             conn.close()
             return
     c.execute("INSERT INTO stats (time, project, count, remark) VALUES (?, ?, ?, ?)",
               (addtime, project, count if count is not None else None, remark))
     conn.commit()
     conn.close()
+# add_record("test_project", datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "auto" )
 
 def get_stats():
     init_db()
@@ -73,7 +77,6 @@ def delete_record(record_id):
 
 if __name__ == "__main__":
     init_db()
-    add_record("test_project", "2023-10-01 13:00:00", "auto" )
-    add_record("test_project", "2023-10-01 14:00:00", "auto" )
+   
     stats = get_stats()
  

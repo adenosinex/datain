@@ -57,11 +57,18 @@ def run_auto_request():
     scheduler.add_job(
         func=send_daily_stats,
         trigger='cron',
-        hour=9,
-        minute=46,
+        hour=8,
+        minute=15,
         second=0
     )
-
+    # scheduler.add_job(
+    #     func=send_daily_stats,
+    #     trigger='cron',
+    #     hour=9,
+    #     minute=42,
+    #     second=0
+    # )
+    print("定时任务已添加，每天8点14分执行 send_daily_stats 函数。")
     # 启动调度器
     scheduler.start()
 

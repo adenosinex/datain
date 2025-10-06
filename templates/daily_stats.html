@@ -68,7 +68,7 @@ createApp({
     data() {
         return {
             project: "downm",
-            count: 30,
+            count: 6,
             remark: "",
             stats: [],
             squatOptions: [4,5,6,7],
@@ -122,7 +122,7 @@ createApp({
             if (this.project === 'ejec') payload.count = this.count;
             await axios.post('/api/daily_stats', payload);
             this.remark = "";
-            if (this.project === 'ejec') this.count = 30;
+            if (this.project === 'ejec') this.count = 6;
             this.fetchStats();
         },
         async quickSquat(n) {
