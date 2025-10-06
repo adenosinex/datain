@@ -18,12 +18,13 @@ from utils.spider import  StealthBrowser
 from utils.bookmark_manager import bookmark_manager
 from utils.daily_stats import add_record, get_stats,delete_record
 from utils.wc_img import factory_wc
+from utils.spider import run_spider2
 app = Flask(__name__)
 CORS(app)
 
 from utils.memorydb import InMemoryURLDB
 
-db=InMemoryURLDB(r'utils\urlcontent.db')
+db_url=InMemoryURLDB(r'utils\urlcontent.db')
 wc=factory_wc()
  
 # 模拟耗时任务
@@ -225,7 +226,17 @@ def remove_bookmark():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-import requests
+def get_text(  url):
+        db_url.delete_url(url)
+        db_url.set_url(url)
+
+        now=time.time()
+        while time.time()-now<5:
+            html=db_url.get_content(url)
+            if html:
+                return html
+            time.sleep(0.5)
+
 
 @app.route('/api/fetch_html', methods=['POST'])
 def fetch_html():
@@ -235,15 +246,7 @@ def fetch_html():
         url = data.get('url')
         if not url:
             return jsonify({'error': '缺少URL参数'}), 400
-        db.delete_url(url)
-        db.set_url(url)
-
-        now=time.time()
-        while time.time()-now<5:
-            html=db.get_content(url)
-            if html:
-                break
-            time.sleep(0.5)
+        html=run_spider2(url)
         return jsonify({'status': 'success', 'html': html})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -261,7 +264,7 @@ def api_daily_stats():
         now = datetime.datetime.now(tz)
         time_str = now.strftime('%Y-%m-%d %H:%M:%S')
         add_record(
-            data['project'],
+            data['project'], 
             time_str,
             data.get('remark', ''),
             data.get('count', None)
@@ -284,10 +287,13 @@ def api_wordcloud():
     text = data.get('text', '')
     if not text.strip():
         return jsonify({'error': '内容不能为空'}), 400
-    file_path = wc(text)
+    if len(text)<200 and 'http' in text and '.' in text:
+        text=run_spider2(text)
+
+    file_path,word_count = wc(text)
     with open(file_path, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
-    return jsonify({'img': encoded_string})
+    return jsonify({'img': encoded_string, 'word_count': word_count})
 
 def main():
     """主函数"""
@@ -313,8 +319,8 @@ def back_run():
     # from scrapers.mi_keeplogin import start_refresher
     # start_refresher()
  
-    from utils.spider import start_spider
-    start_spider()
+    # from utils.spider import start_spider
+    # start_spider()
     from utils.auto_request import run_auto_request
     run_auto_request()
     

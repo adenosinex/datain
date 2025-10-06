@@ -43,7 +43,7 @@ createApp({
                 const end = Date.now();
                 const seconds = (end - start) / 1000;
                 this.genTime = seconds.toFixed(2) + ' 秒';
-                this.wordCount = this.text.length;
+                this.wordCount = res.data.word_count;
                 this.speed = seconds > 0 ? (this.wordCount / seconds).toFixed(2) + ' 字/秒' : 'N/A';
             } catch(e) {
                 this.error = e.response?.data?.error || '生成失败';

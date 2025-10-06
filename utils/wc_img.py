@@ -87,7 +87,7 @@ def factory_wc():
     def f(text):
         if len(text)<200 and os.path.isdir(text):
             text=' '.join([i.stem for i in get_allfiles(text)  ])
-        return wc_generator.generate(text)
+        return wc_generator.generate(text),len(text)
     return f
 
 if __name__ == "__main__":

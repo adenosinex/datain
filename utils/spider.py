@@ -58,6 +58,14 @@ class StealthBrowser:
             print("❌ 关闭浏览器失败:", e)
 
 
+def run_spider2(url):
+    bot = StealthBrowser(headless=True)
+     
+    text = bot.get_text(url)
+    if text:
+        return  text
+    return ''
+     
 def run_spider():
     bot = StealthBrowser(headless=True)
 
