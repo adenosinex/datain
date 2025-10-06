@@ -11,13 +11,15 @@
 <div id="app" class="max-w-xl mx-auto mt-8 p-6 bg-white rounded-lg shadow">
     <h2 class="text-2xl font-bold mb-4 text-blue-700">词云生成</h2>
     <textarea v-model="text" rows="6" class="w-full border rounded mb-4 p-2" placeholder="输入文字"></textarea>
+    <input v-model="exclude" class="w-full border rounded mb-4 p-2" placeholder="剔除词（用空格分隔）">
     <button @click="genCloud" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">生成词云</button>
     <div v-if="img" class="mt-6">
         <img :src="'data:image/png;base64,'+img" alt="词云图" class="rounded shadow">
         <div class="text-gray-500 mt-2">
             生成时间：${genTime}<br>
             输入字数：${wordCount}<br>
-            每秒处理量：${speed}
+            每秒处理量：${speed}<br>
+            上传词语：${uploadedWords}
         </div>
     </div>
     <div v-if="error" class="text-red-500 mt-2">${error}</div>
@@ -27,7 +29,7 @@ const { createApp } = Vue;
 createApp({
     delimiters: ['${', '}'],
     data() {
-        return { text: '', img: '', error: '', genTime: '', wordCount: 0, speed: '' }
+        return { text: '', exclude: '', img: '', error: '', genTime: '', wordCount: 0, speed: '', uploadedWords: '' }
     },
     methods: {
         async genCloud() {
@@ -36,15 +38,17 @@ createApp({
             this.genTime = '';
             this.wordCount = 0;
             this.speed = '';
+            this.uploadedWords = '';
             const start = Date.now();
             try {
-                const res = await axios.post('/api/wordcloud', { text: this.text });
+                const res = await axios.post('/api/wordcloud', { text: this.text, exclude: this.exclude });
                 this.img = res.data.img;
                 const end = Date.now();
                 const seconds = (end - start) / 1000;
                 this.genTime = seconds.toFixed(2) + ' 秒';
                 this.wordCount = res.data.word_count;
                 this.speed = seconds > 0 ? (this.wordCount / seconds).toFixed(2) + ' 字/秒' : 'N/A';
+                this.uploadedWords = res.data.uploaded_words;
             } catch(e) {
                 this.error = e.response?.data?.error || '生成失败';
             }

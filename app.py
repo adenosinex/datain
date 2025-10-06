@@ -290,7 +290,13 @@ def api_wordcloud():
     if len(text)<200 and 'http' in text and '.' in text:
         text=run_spider2(text)
 
-    file_path,word_count = wc(text)
+    exclude = data.get('exclude', '')
+    if not text.strip():
+        return jsonify({'error': '内容不能为空'}), 400
+    exclude_words = [w.strip() for w in exclude.split(' ') if w.strip()]
+  
+
+    file_path,word_count = wc(text,exclude_words)
     with open(file_path, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
     return jsonify({'img': encoded_string, 'word_count': word_count})

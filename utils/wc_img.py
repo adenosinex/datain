@@ -84,9 +84,14 @@ def factory_wc():
         font_path="msyh.ttc",
         stopwords_file=r"data\百度停用词表.txt"
     )
-    def f(text):
+    def f(text,exclude=[]):
         if len(text)<200 and os.path.isdir(text):
             text=' '.join([i.stem for i in get_allfiles(text)  ])
+
+        if exclude:
+            wc_generator.stopwords.update(exclude)
+            open(r"data\temp_stopwords.txt",'w',encoding='utf-8').write('\n'.join(exclude))
+            
         return wc_generator.generate(text),len(text)
     return f
 
