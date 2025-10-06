@@ -127,3 +127,4 @@ data/
 data/*cookie*
 utils/urlcontent.db
 static/cdn/*
+wordcloud.png

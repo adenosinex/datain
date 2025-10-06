@@ -13,6 +13,18 @@
           "description": "快捷记录"
         } ,
         {
+          "title": "wc",
+          "url": "/wordcloud",
+          "icon": "🌍",
+          "description": "词云图"
+        } ,
+        {
+          "title": "在线备份wc",
+          "url": "https://wordcloud.online/zh/",
+          "icon": "🌍",
+          "description": "wc"
+        } ,
+        {
           "title": "无氧项目",
           "url": "https://snake.zin6.dpdns.org/",
           "icon": "🌍",

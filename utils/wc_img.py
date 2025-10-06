@@ -1,9 +1,11 @@
 # pip install jieba wordcloud
 
+import os
+from pathlib import Path
 import jieba
 from wordcloud import WordCloud
 
-# pip istall jieba wordcloud  
+# pip install jieba wordcloud  
 class ChineseWordCloud:
     """
     中文词云生成器类
@@ -69,16 +71,28 @@ class ChineseWordCloud:
         return output_file
 
 # ------------------- 使用示例 -------------------
-def factory():
+
+def get_allfiles(folder):
+    files=[]
+    for i in os.walk(folder):
+        for j in i[2]:
+            files.append(Path(i[0]).joinpath(j))
+    return files
+
+def factory_wc():
     wc_generator = ChineseWordCloud(
         font_path="msyh.ttc",
-        stopwords_file=r"C:\Users\xin\OneDrive\文档\元数据\数据库\文本信息\百度停用词表.txt"
+        stopwords_file=r"data\百度停用词表.txt"
     )
-    return wc_generator.generate
+    def f(text):
+        if len(text)<200 and os.path.isdir(text):
+            text=' '.join([i.stem for i in get_allfiles(text)  ])
+        return wc_generator.generate(text)
+    return f
 
 if __name__ == "__main__":
     # 初始化类
-    wc=factory()
+    wc=factory_wc()
     # 读取文本
     with open("a.txt", "r", encoding="utf-8") as f:
         text = f.read()

@@ -1,3 +1,4 @@
+import base64
 import os
 import sqlite3
 import threading
@@ -16,13 +17,14 @@ from scrapers.mipad import run_getpercrnt
 from utils.spider import  StealthBrowser
 from utils.bookmark_manager import bookmark_manager
 from utils.daily_stats import add_record, get_stats,delete_record
+from utils.wc_img import factory_wc
 app = Flask(__name__)
 CORS(app)
 
 from utils.memorydb import InMemoryURLDB
 
 db=InMemoryURLDB(r'utils\urlcontent.db')
-
+wc=factory_wc()
  
 # 模拟耗时任务
 def long_running_task(task_id):
@@ -271,6 +273,21 @@ def api_daily_stats():
 def delete_daily_record(record_id):
     success = delete_record(record_id)
     return jsonify({'status': 'ok'})
+
+@app.route('/wordcloud')
+def wordcloud_page():
+    return render_template('wordcloud.html')
+
+@app.route('/api/wordcloud', methods=['POST'])
+def api_wordcloud():
+    data = request.get_json()
+    text = data.get('text', '')
+    if not text.strip():
+        return jsonify({'error': '内容不能为空'}), 400
+    file_path = wc(text)
+    with open(file_path, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+    return jsonify({'img': encoded_string})
 
 def main():
     """主函数"""
